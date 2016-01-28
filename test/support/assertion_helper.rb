@@ -1,11 +1,12 @@
 module RouteTranslator
   module AssertionHelper
     def assert_helpers_include(*helpers)
-      controller = ActionController::Base.new
+      controller =  @controller if instance_variable_defined?(:@controller)
+      controller ||= ActionController::Base.new # can be nil
       view = ActionView::Base.new
       helpers.each do |helper|
         %w(url path).each do |suffix|
-          [controller, view].each { |obj| assert_respond_to obj, "#{helper}_#{suffix}".to_sym }
+          [controller].each { |obj| assert_respond_to obj, "#{helper}_#{suffix}".to_sym }
         end
       end
     end

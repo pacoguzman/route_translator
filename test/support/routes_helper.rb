@@ -1,17 +1,5 @@
 module RouteTranslator
   module RoutesHelper
-    def draw_routes(&block)
-      @routes.draw(&block)
-      if @routes.respond_to?(:install_helpers)
-        @routes.install_helpers
-      else
-        %w(ActionController ActionMailer ActionView).each do |klass_name|
-          next unless Module.const_defined?(klass_name)
-          klass_name.constantize::Base.__send__(:include, @routes.url_helpers)
-        end
-      end
-    end
-
     def path_string(route)
       path = route.respond_to?(:path) ? route.path : route.to_s.split(' ')[1]
       path.respond_to?(:spec) ? path.spec.to_s : path.to_s
